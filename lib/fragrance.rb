@@ -20,8 +20,8 @@ module Fragrance
                 Timeout.timeout(30) do
                   deregister_instances_from_load_balancer(load_balancer, instance_id)
                   register_instances_with_load_balancer(load_balancer, instance_id)
-                  # ELB is slow to update the state even though the instance is registered / deregister.
-                  # The following code show be uncommented when there is a better way to determine
+                  # ELB is slow to update the state even though the instance is registered / deregistered.
+                  # The following code should be uncommented when there is a better way to determine
                   # the exact instance state.
                   # while ! load_balancer_instance_id_state(load_balancer, instance_id)
                   #   register_instances_with_load_balancer(load_balancer, instance_id)
