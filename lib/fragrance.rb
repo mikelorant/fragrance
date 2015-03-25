@@ -1,5 +1,6 @@
 require 'fragrance/version'
 require 'aws-sdk'
+require 'pry'
 
 module Fragrance
   class App
@@ -17,14 +18,18 @@ module Fragrance
             if instance_id_state(instance_id) == 'running'
               begin
                 Timeout.timeout(30) do
-                  deregister_instances_with_load_balancer(load_balancer, instance_id)
-                  while ! load_balancer_instance_id_state(load_balancer, instance_id)
-                    register_instances_with_load_balancer(load_balancer, instance_id)
-                    until load_balancer_instance_id_state(load_balancer, instance_id)
-                      sleep 5
-                    end
-                    sleep 5
-                  end
+                  deregister_instances_from_load_balancer(load_balancer, instance_id)
+                  register_instances_with_load_balancer(load_balancer, instance_id)
+                  # ELB is slow to update the state even though the instance is registered / deregister.
+                  # The following code show be uncommented when there is a better way to determine
+                  # the exact instance state.
+                  # while ! load_balancer_instance_id_state(load_balancer, instance_id)
+                  #   register_instances_with_load_balancer(load_balancer, instance_id)
+                  #   until load_balancer_instance_id_state(load_balancer, instance_id)
+                  #     sleep 5
+                  #   end
+                  #   sleep 5
+                  # end
                 end
               rescue Timeout::Error
                 puts 'Timed out waiting for instance to be added/removed from load balancer.'
@@ -70,8 +75,8 @@ module Fragrance
       nil
     end
 
-    def deregister_instances_with_load_balancer(load_balancer, instance_id)
-      @elb.deregister_instances_with_load_balancer(
+    def deregister_instances_from_load_balancer(load_balancer, instance_id)
+      @elb.deregister_instances_from_load_balancer(
         load_balancer_name: load_balancer,
         instances: [
           {
