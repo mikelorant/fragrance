@@ -45,8 +45,11 @@ module Fragrance
 
     def find_load_balancer_name_by_instance_id(instance_id)
       load_balancers = Array.new
-      @elb.describe_load_balancers.data.first.each do |load_balancer|
+
+      @load_balancers = @elb.describe_load_balancers.data.first if ! @load_balancers
+      @load_balancers.each do |load_balancer|
         if load_balancer.instances.map(&:instance_id).to_s.include? instance_id
+          puts "Found #{load_balancer.load_balancer_name}: #{instance_id}"
           load_balancers << load_balancer.load_balancer_name
         end
       end
