@@ -16,13 +16,24 @@ module Fragrance
     def run
       ARGV.each do |instance_id|
         @elb.find_instance(instance_id).each do |load_balancer|
-          if @elb.instance_state(load_balancer, instance_id) == 'OutOfService'
-            if @ec2.state(instance_id) == 'running'
-              @elb.reregister_instance(load_balancer, instance_id)
-            end
+          puts "Found #{load_balancer}: #{instance_id}"
+          if check(load_balancer, instance_id)
+            puts "Repairing #{load_balancer}: #{instance_id}"
+            repair(load_balancer, instance_id)
           end
         end
       end
+    end
+
+    private
+
+    def check(load_balancer, instance_id)
+      (@elb.instance_state(load_balancer, instance_id) == 'OutOfService') &&
+        (@ec2.state(instance_id) == 'running')
+    end
+
+    def repair(load_balancer, instance_id)
+      @elb.reregister_instance(load_balancer, instance_id)
     end
   end
 end
