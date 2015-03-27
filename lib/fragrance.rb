@@ -15,10 +15,10 @@ module Fragrance
 
     def run
       ARGV.each do |instance_id|
-        @elb.instance(instance_id).each do |load_balancer|
+        @elb.find_instance(instance_id).each do |load_balancer|
           if @elb.instance_state(load_balancer, instance_id) == 'OutOfService'
             if @ec2.state(instance_id) == 'running'
-              @elb.reregister(load_balancer, instance_id)
+              @elb.reregister_instance(load_balancer, instance_id)
             end
           end
         end

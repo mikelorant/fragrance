@@ -9,7 +9,7 @@ module Fragrance
       @elb = Aws::ElasticLoadBalancing::Client.new
     end
 
-    def instance(instance_id)
+    def find_instance(instance_id)
       load_balancers = []
 
       @load_balancers ||= @elb.describe_load_balancers.data.first
@@ -36,15 +36,15 @@ module Fragrance
       nil
     end
 
-    def reregister(load_balancer, instance_id)
+    def reregister_instance(load_balancer, instance_id)
       Timeout.timeout(30) do
-        deregister(load_balancer, instance_id)
-        register(load_balancer, instance_id)
+        deregister_instance(load_balancer, instance_id)
+        register_instance(load_balancer, instance_id)
         # ELB is slow to update the state even though the instance is
         # registered / deregistered. The following code should be uncommented
         # when there is a better way to determine the exact instance state.
         # while ! instance_state(load_balancer, instance_id)
-        #   register(load_balancer, instance_id)
+        #   register_instance(load_balancer, instance_id)
         #   until instance_state(load_balancer, instance_id)
         #     sleep 5
         #   end
@@ -58,7 +58,7 @@ module Fragrance
 
     private
 
-    def deregister(load_balancer, instance_id)
+    def deregister_instance(load_balancer, instance_id)
       @elb.deregister_instances_from_load_balancer(
         load_balancer_name: load_balancer,
         instances: [
@@ -69,7 +69,7 @@ module Fragrance
       )
     end
 
-    def register(load_balancer, instance_id)
+    def register_instance(load_balancer, instance_id)
       @elb.register_instances_with_load_balancer(
         load_balancer_name: load_balancer,
         instances: [
