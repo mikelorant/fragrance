@@ -1,6 +1,7 @@
 require 'aws-sdk'
 
 module Fragrance
+  # Fragrance::Elb
   class Elb < Core
     def initialize
       super
@@ -51,7 +52,7 @@ module Fragrance
         # end
       end
     rescue Timeout::Error
-      puts 'Timed out waiting for instance to be added/removed from load balancer.'
+      puts 'Timeout waiting for instance state change in load balancer.'
       exit 1
     end
 

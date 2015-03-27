@@ -1,8 +1,7 @@
-# Fragrance::Aws
-
 require 'aws-sdk'
 
 module Fragrance
+  # Fragrance::Core
   class Core
     def initialize
       Aws.config = {

@@ -1,8 +1,7 @@
-# Fragrance::Ec2
-
 require 'aws-sdk'
 
 module Fragrance
+  # Fragrance::Ec2
   class Ec2 < Core
     def initialize
       super
