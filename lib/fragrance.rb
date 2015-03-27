@@ -16,25 +16,7 @@ module Fragrance
         find_load_balancer_name_by_instance_id(instance_id).each do |load_balancer|
           if load_balancer_instance_id_state(load_balancer, instance_id) == 'OutOfService'
             if instance_id_state(instance_id) == 'running'
-              begin
-                Timeout.timeout(30) do
-                  deregister_instances_from_load_balancer(load_balancer, instance_id)
-                  register_instances_with_load_balancer(load_balancer, instance_id)
-                  # ELB is slow to update the state even though the instance is registered / deregistered.
-                  # The following code should be uncommented when there is a better way to determine
-                  # the exact instance state.
-                  # while ! load_balancer_instance_id_state(load_balancer, instance_id)
-                  #   register_instances_with_load_balancer(load_balancer, instance_id)
-                  #   until load_balancer_instance_id_state(load_balancer, instance_id)
-                  #     sleep 5
-                  #   end
-                  #   sleep 5
-                  # end
-                end
-              rescue Timeout::Error
-                puts 'Timed out waiting for instance to be added/removed from load balancer.'
-                exit 1
-              end
+              register_instances_with_load_balancer(load_balancer, instance_id)
             end
           end
         end
@@ -76,6 +58,26 @@ module Fragrance
       ).data.instance_statuses.first.instance_state.name
     rescue NoMethodError
       nil
+    end
+
+    def reregister_instances_with_load_balancer(load_balancer, instance_id)
+      Timeout.timeout(30) do
+        deregister_instances_from_load_balancer(load_balancer, instance_id)
+        register_instances_with_load_balancer(load_balancer, instance_id)
+        # ELB is slow to update the state even though the instance is registered / deregistered.
+        # The following code should be uncommented when there is a better way to determine
+        # the exact instance state.
+        # while ! load_balancer_instance_id_state(load_balancer, instance_id)
+        #   register_instances_with_load_balancer(load_balancer, instance_id)
+        #   until load_balancer_instance_id_state(load_balancer, instance_id)
+        #     sleep 5
+        #   end
+        #   sleep 5
+        # end
+      end
+    rescue Timeout::Error
+      puts 'Timed out waiting for instance to be added/removed from load balancer.'
+      exit 1
     end
 
     def deregister_instances_from_load_balancer(load_balancer, instance_id)
