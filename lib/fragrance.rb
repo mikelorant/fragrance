@@ -1,4 +1,5 @@
 require 'fragrance/version'
+require 'fragrance/commandline'
 require 'fragrance/core'
 require 'fragrance/ec2'
 require 'fragrance/elb'
@@ -13,11 +14,15 @@ module Fragrance
       @elb = Fragrance::Elb.new
     end
 
-    def run
-      ARGV.each do |instance_id|
+    def version
+      puts Fragrance::VERSION
+    end
+
+    def refresh(instances)
+      instances.each do |instance_id|
         @elb.find_instance(instance_id).each do |load_balancer|
           if check(load_balancer, instance_id)
-            refresh(load_balancer, instance_id)
+            reregister(load_balancer, instance_id)
           end
         end
       end
@@ -31,8 +36,8 @@ module Fragrance
         (@ec2.state(instance_id) == 'running')
     end
 
-    def refresh(load_balancer, instance_id)
-      puts "Refreshing #{load_balancer}: #{instance_id}"
+    def reregister(load_balancer, instance_id)
+      puts "Reregistering #{load_balancer}: #{instance_id}"
       @elb.reregister_instance(load_balancer, instance_id)
     end
   end
