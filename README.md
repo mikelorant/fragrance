@@ -1,8 +1,16 @@
-# Fragrance
+# Overview
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/fragrance`. To experiment with that code, run `bin/console` for an interactive prompt.
+`fragrance` refreshes stopped instances in AWS Elastic Load Balancers. Multiple instances can be provided and every load balancer in the account will be checked.
 
-TODO: Delete this and the text above, and describe your gem
+## Example
+
+```sh
+> fragrance refresh --instances i-12345678 i-87654321
+Found elb-example: i-12345678
+Reregistering elb-example: i-12345678
+Found elb-example: i-87654321
+Reregistering elb-example: i-87654321
+```
 
 ## Installation
 
@@ -22,7 +30,16 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+To use `fragrance` you should have a the AWS CLI tools installed and configured. This sets up the required credentials that are used by the SDK.
+
+The following commands are supported.
+
+```
+Fragrance commands:
+  fragrance help [COMMAND]                         # Describe available commands or one specific command
+  fragrance refresh -i, --instances=one two three  # Refresh stopped instances in all load balancers.
+  fragrance version                                # Print the version and exit.
+```
 
 ## Development
 
@@ -32,7 +49,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/fragrance/fork )
+1. Fork it ( https://github.com/mikelorant/fragrance/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
