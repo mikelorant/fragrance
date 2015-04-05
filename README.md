@@ -1,11 +1,11 @@
-# Overview
+## Overview
 
 `fragrance` refreshes stopped instances in AWS Elastic Load Balancers. Multiple instances can be provided and every load balancer in the account will be checked.
 
 ## Example
 
 ```sh
-> fragrance refresh --instances i-12345678 i-87654321
+$ fragrance refresh --instances i-12345678 i-87654321
 Found elb-example: i-12345678
 Reregistering elb-example: i-12345678
 Found elb-example: i-87654321
@@ -30,7 +30,7 @@ Or install it yourself as:
 
 ## Usage
 
-To use `fragrance` you should have a the AWS CLI tools installed and configured. This sets up the required credentials that are used by the SDK.
+To use `fragrance` you should have the AWS CLI tools installed and configured. This sets up the required credentials that are used by the SDK.
 
 The following commands are supported.
 
