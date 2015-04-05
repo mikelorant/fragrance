@@ -18,7 +18,7 @@ module Fragrance
                   type:     :array,
                   aliases:  '-i',
                   required: true,
-                  desc: 'List of instances separated by spaces.'
+                  desc:     'List of instances separated by spaces.'
 
     def refresh
       Fragrance::App.new.refresh(options[:instances])
