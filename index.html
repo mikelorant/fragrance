@@ -19,15 +19,15 @@
     </section>
 
     <section class="main-content">
-      <h1>
-<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview</h1>
+      <h2>
+<a id="overview" class="anchor" href="#overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Overview</h2>
 
 <p><code>fragrance</code> refreshes stopped instances in AWS Elastic Load Balancers. Multiple instances can be provided and every load balancer in the account will be checked.</p>
 
 <h2>
 <a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h2>
 
-<div class="highlight highlight-sh"><pre><span class="pl-k">&gt;</span> fragrance refresh --instances i-12345678 i-87654321
+<div class="highlight highlight-sh"><pre>$ fragrance refresh --instances i-12345678 i-87654321
 Found elb-example: i-12345678
 Reregistering elb-example: i-12345678
 Found elb-example: i-87654321
@@ -53,7 +53,7 @@ Reregistering elb-example: i-87654321</pre></div>
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<p>To use <code>fragrance</code> you should have a the AWS CLI tools installed and configured. This sets up the required credentials that are used by the SDK.</p>
+<p>To use <code>fragrance</code> you should have the AWS CLI tools installed and configured. This sets up the required credentials that are used by the SDK.</p>
 
 <p>The following commands are supported.</p>
 
